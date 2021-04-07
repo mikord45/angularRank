@@ -13,12 +13,9 @@ const reduxAllContributors = (state = { all: [] as any[] }, action: actionInterf
                 all: action.data
             })
         case "addNewContributorsData":
-            // console.log(action.data)
-            let current = state.all.concat(action.data)
-
-            return Object.assign({}, state, {
-                all: current
-            })
+            const current = state.all.concat(action.data)
+            Object.assign(state.all, current)
+            return { ...state }
         default:
             return state
     }

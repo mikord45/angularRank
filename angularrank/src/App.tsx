@@ -6,8 +6,16 @@ import { allRepos } from "./api/api"
 import { returningInterfaceFromAllRepos, returningInterfaceContributors, contributorData } from "./api/api"
 import { useSelector, useDispatch } from 'react-redux'
 
+interface ContributorDataWithFollowersAndReposNumber extends contributorData {
+  numberOfRepositories: number,
+  numberOfFollowers: number
+
+}
+
 function App() {
   console.log("render")
+  let allContributors: contributorData[] = [] as contributorData[]
+  let toGo: number
   const dispatch = useDispatch()
   const selector = useSelector((state: any) => state)
 
@@ -33,22 +41,18 @@ function App() {
   }
 
   const createListOfContributorsFromOrganization = (): void => {
-    // console.log("cztery")
-    // console.log(selector.reduxAllReposFromOrganization)
-    setTimeout(() => {
-      // console.log(sel)
-    }, 5000)
     const orgName: string = "angular"
+    toGo = selector.reduxAllReposFromOrganization.all.length
     for (let i: number = 0; i < selector.reduxAllReposFromOrganization.all.length; i++) {
-      console.log(i)
+      // console.log(i)
+      // console.log(selector.reduxAllReposFromOrganization.all[i].name)
       createListOfContributorsFromOneRepo(orgName, selector.reduxAllReposFromOrganization.all[i].name, 1, [] as contributorData[])
     }
 
   }
 
   const createListOfContributorsFromOneRepo = (owner: string, repoName: string, page: number, prev: contributorData[]): void => {
-    console.log("raz")
-    Api.getAllContributorsFromParticularRepo("angular", "angular-jquery-ui", 1)
+    Api.getAllContributorsFromParticularRepo("angular", repoName, page)
       .then((data: returningInterfaceContributors) => {
         if (data.last === false) {
           const current = prev.concat(data.listOfContributors)
@@ -56,13 +60,34 @@ function App() {
           createListOfContributorsFromOneRepo(owner, repoName, currentPage, current)
         }
         else {
-          dispatch({ type: "setNewContributorsData", data: data.listOfContributors })
+          const current = prev.concat(data.listOfContributors)
+          // console.log(current, " ", repoName)
+          // console.log(current.length)
+          // console.log("----------------")
+          // dispatch({ type: "setNewContributorsData", data: current })
+          allContributors = allContributors.concat(current)
+          toGo -= 1
+          if (toGo === 0) {
+            console.log(allContributors)
+            const allContributorsAfterMerge: contributorData[] = [] as contributorData[]
+            let helper: any = {}
+            allContributors.forEach((now: contributorData) => {
+              if (helper.hasOwnProperty(now.login)) {
+                helper[now.login].contributions += now.contributions
+              }
+              else {
+                helper[now.login] = now
+              }
+            })
+            for (const prop in helper) {
+              allContributorsAfterMerge.push(helper[prop])
+            }
+            console.log(allContributorsAfterMerge)
+          }
         }
       })
-      .catch((error: any) => {
-        console.log(`Error: ${error}`)
-      })
   }
+
 
   useEffect((): void => {
     // const allReposToUseDispatch = [] as allRepos[]

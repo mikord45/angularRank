@@ -120,6 +120,7 @@ export default class Api {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'token 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',
                 },
             })
                 .then(async (response) => {
@@ -155,11 +156,13 @@ export default class Api {
     }
 
     static getAllContributorsFromParticularRepo(owner: string, repoName: string, page: number): Promise<returningInterfaceContributors> {
+        // console.log(page)
         const promiseToReturn: Promise<returningInterfaceContributors> = new Promise((resolve, reject) => {
             fetch(`${Api.baseURL}/repos/${owner}/${repoName}/contributors?per_page=100&page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'token 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',
                 },
             })
                 .then(async (response) => {
@@ -176,10 +179,20 @@ export default class Api {
                     else {
                         last = true
                     }
-                    const obj: returningInterfaceContributors = {
-                        listOfContributors: await response.json(),
-                        last: last
+                    let obj: returningInterfaceContributors
+                    if (response.status == 200) {
+                        obj = {
+                            listOfContributors: await response.json(),
+                            last: last
+                        }
                     }
+                    else {
+                        obj = {
+                            listOfContributors: [] as contributorData[],
+                            last: true
+                        }
+                    }
+                    // console.log(obj.listOfContributors.length, " ", repoName)
                     return (obj)
                 })
                 .then((data: returningInterfaceContributors) => {
@@ -194,21 +207,21 @@ export default class Api {
     }
 
 
-    static getNumberOfFollowersOfParticularUser(userName: string) {
-        fetch(`${Api.baseURL}/users/${userName}/followers`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }
+    // static getNumberOfFollowersOfParticularUser(userName: string) {
+    //     fetch(`${Api.baseURL}/users/${userName}/followers`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log('Success:', data);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error:', error);
+    //         });
+    // }
 
     static getReposOfParticularUser(userName: string) {
         fetch(`${Api.baseURL}/users/${userName}/repos`, {
