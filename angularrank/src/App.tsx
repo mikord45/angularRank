@@ -3,10 +3,10 @@ import logo from './logo.svg';
 import './App.css';
 import Api from "./api/api"
 import { allRepos } from "./api/api"
-import { returningInterfaceFromAllRepos, returningInterfaceContributors, contributorData } from "./api/api"
+import { returningInterfaceFromAllRepos, returningInterfaceContributors, ReturningInterfaceFollowersAndRepos, contributorData } from "./api/api"
 import { useSelector, useDispatch } from 'react-redux'
 
-interface ContributorDataWithFollowersAndReposNumber extends contributorData {
+export interface ContributorDataWithFollowersAndReposNumber extends contributorData {
   numberOfRepositories: number,
   numberOfFollowers: number
 
@@ -55,39 +55,72 @@ function App() {
     Api.getAllContributorsFromParticularRepo("angular", repoName, page)
       .then((data: returningInterfaceContributors) => {
         if (data.last === false) {
+          data.listOfContributors.forEach((elem) => {
+            elem.repo = repoName
+          })
           const current = prev.concat(data.listOfContributors)
           const currentPage: number = page + 1
           createListOfContributorsFromOneRepo(owner, repoName, currentPage, current)
         }
         else {
           const current = prev.concat(data.listOfContributors)
-          // console.log(current, " ", repoName)
-          // console.log(current.length)
-          // console.log("----------------")
-          // dispatch({ type: "setNewContributorsData", data: current })
+          // console.log(current)
           allContributors = allContributors.concat(current)
+          console.log(allContributors)
           toGo -= 1
           if (toGo === 0) {
-            console.log(allContributors)
+            console.log("raz wyzerowane")
+            // console.log(allContributors)
             const allContributorsAfterMerge: contributorData[] = [] as contributorData[]
             let helper: any = {}
             allContributors.forEach((now: contributorData) => {
+              // console.log(now.repo)
               if (helper.hasOwnProperty(now.login)) {
                 helper[now.login].contributions += now.contributions
+                helper[now.login].repo.push(now.repo)
               }
               else {
                 helper[now.login] = now
+                helper[now.login].repo = [now.repo]
               }
             })
             for (const prop in helper) {
               allContributorsAfterMerge.push(helper[prop])
             }
             console.log(allContributorsAfterMerge)
+            // const getInfoAboutContributors: Promise<number>[] = [] as Promise<number>[]
+            getDataAboutContributorsWithFollowersAndReposNumber(0, allContributorsAfterMerge)
           }
         }
       })
   }
 
+  const getDataAboutContributorsWithFollowersAndReposNumber = (startingNumber: number, listOfContributors: contributorData[]): void => {
+    const nowTab: Promise<ReturningInterfaceFollowersAndRepos>[] = []
+    let endingNumber: number
+    if (startingNumber + 100 < listOfContributors.length) {
+      endingNumber = startingNumber + 100
+    }
+    else {
+      endingNumber = listOfContributors.length
+    }
+    for (let i: number = startingNumber; i < endingNumber; i++) {
+      nowTab.push(Api.getUserDetails(listOfContributors[i].login, listOfContributors[i].contributions, [] as string[]))
+
+    }
+    Promise.all(nowTab)
+      .then((value: ReturningInterfaceFollowersAndRepos[]) => {
+        // console.log("raz")
+        // console.log(value)
+        dispatch({ type: "addNewAdditionalContributorsData", data: value })
+        if (endingNumber !== listOfContributors.length) {
+          getDataAboutContributorsWithFollowersAndReposNumber(endingNumber, listOfContributors)
+        }
+        else {
+          console.log("koniec")
+        }
+      })
+  }
 
   useEffect((): void => {
     // const allReposToUseDispatch = [] as allRepos[]
