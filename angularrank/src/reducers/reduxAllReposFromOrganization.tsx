@@ -6,9 +6,7 @@ interface actionInterface {
     data: AllRepos[]
 }
 
-const reduxAllReposFromOrganization = (state = { all: [] as any[] }, action: actionInterface) => {
-    // console.log("reducer")
-    // console.log(action)
+const reduxAllReposFromOrganization = (state = { all: [] as AllRepos[] }, action: actionInterface) => {
     switch (action.type) {
         case "setNewReposFromOrganization":
             return Object.assign({}, state, {

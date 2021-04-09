@@ -11,7 +11,7 @@ export interface ReturningInterfaceFollowersAndRepos {
 }
 
 export interface ReturningInterfaceContributors {
-    listOfContributors: ContributorData[],
+    listOfContributors: ContributorDataWithReposInformation[],
     last: boolean,
 }
 export interface ReturningInterfaceFromAllRepos {
@@ -19,6 +19,11 @@ export interface ReturningInterfaceFromAllRepos {
     last: boolean
 }
 
+
+
+export interface ContributorDataWithReposInformation extends ContributorData {
+    repo: string
+}
 
 
 export interface ContributorData {
@@ -41,7 +46,6 @@ export interface ContributorData {
     type: string
     site_admin: boolean,
     contributions: number,
-    repo: string
 }
 
 export interface AllRepos {
@@ -89,10 +93,10 @@ export interface AllRepos {
     labels_url: string
     language: string
     languages_url: string
-    license: any
+    license: Object
     merges_url: string
     milestones_url: string
-    mirror_url: any
+    mirror_url: Object
     name: string
     node_id: string
     notifications_url: string
@@ -166,7 +170,6 @@ export default class Api {
     }
 
     static getAllContributorsFromParticularRepo(owner: string, repoName: string, page: number): Promise<ReturningInterfaceContributors> {
-        // console.log(page)
         const promiseToReturn: Promise<ReturningInterfaceContributors> = new Promise((resolve, reject) => {
             fetch(`${Api.baseURL}/repos/${owner}/${repoName}/contributors?per_page=100&page=${page}`, {
                 method: 'GET',
@@ -190,21 +193,23 @@ export default class Api {
                     }
                     let obj: ReturningInterfaceContributors
                     if (response.status === 200) {
-                        let listOfContributorsHelper: Array<ContributorData> = await response.json()
-                        listOfContributorsHelper.forEach((elem) => {
-                            elem.repo = repoName
+                        const listOfContributorsHelper: Array<ContributorData> = await response.json()
+                        const listOfContributorsHelper2: Array<ContributorDataWithReposInformation> = listOfContributorsHelper.map((elem) => {
+                            const obj = {
+                                ...elem,
+                                repo: repoName
+                            }
+                            return (obj)
                         })
                         obj = {
-                            listOfContributors: listOfContributorsHelper,
+                            listOfContributors: listOfContributorsHelper2,
                             last: last,
-                            // repo: repoName
                         }
                     }
                     else {
                         obj = {
-                            listOfContributors: [] as ContributorData[],
+                            listOfContributors: [] as ContributorDataWithReposInformation[],
                             last: true,
-                            // repo: repoName
                         }
                     }
                     return (obj)
@@ -212,7 +217,7 @@ export default class Api {
                 .then((data: ReturningInterfaceContributors) => {
                     resolve(data)
                 })
-                .catch((error: any) => {
+                .catch((error) => {
                     console.error('Error:', error);
                     reject(error)
                 });
@@ -254,7 +259,6 @@ export default class Api {
     // }
 
     static getUserDetails(userName: string, contributions: number, repos: string[]): Promise<ReturningInterfaceFollowersAndRepos> {
-        // console.log(controlNumber, " ", userName)
         const promiseToReturn: Promise<ReturningInterfaceFollowersAndRepos> = new Promise((resolve, reject) => {
             fetch(`${Api.baseURL}/users/${userName}`, {
                 method: 'GET',
@@ -275,7 +279,14 @@ export default class Api {
                 })
                 .catch((error) => {
                     console.error('Error:', error);
-                    reject(error)
+                    const obj: ReturningInterfaceFollowersAndRepos = {
+                        numberOfRepositories: 0,
+                        numberOfFollowers: 0,
+                        userName: userName,
+                        numberOfContributions: contributions,
+                        repos: repos
+                    }
+                    reject(obj)
                 });
         })
         return (promiseToReturn)

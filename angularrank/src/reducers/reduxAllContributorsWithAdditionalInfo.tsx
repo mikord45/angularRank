@@ -6,7 +6,7 @@ interface actionInterface {
     data: ContributorDataWithFollowersAndReposNumber
 }
 
-const reduxAllContributorsWithAdditionalInfo = (state = { all: [] as any[] }, action: actionInterface) => {
+const reduxAllContributorsWithAdditionalInfo = (state = { all: [] as ContributorDataWithFollowersAndReposNumber[] }, action: actionInterface) => {
     switch (action.type) {
         case "setNewAdditionalContributorsData":
             return Object.assign({}, state, {
