@@ -1,12 +1,12 @@
 
-import { allRepos, contributorData } from "../api/api"
+import { ContributorData } from "../api/api"
 
-interface actionInterface {
+interface ActionInterface {
     type: string,
-    data: contributorData[]
+    data: ContributorData[]
 }
 
-const reduxAllContributors = (state = { all: [] as any[] }, action: actionInterface) => {
+const reduxAllContributors = (state = { all: [] as any[] }, action: ActionInterface) => {
     switch (action.type) {
         case "setNewContributorsData":
             return Object.assign({}, state, {

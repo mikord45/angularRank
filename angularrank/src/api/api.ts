@@ -1,4 +1,3 @@
-import { resolve } from "node:path";
 import parse from "parse-link-header"
 
 
@@ -11,19 +10,18 @@ export interface ReturningInterfaceFollowersAndRepos {
 
 }
 
-export interface returningInterfaceContributors {
-    listOfContributors: contributorData[],
+export interface ReturningInterfaceContributors {
+    listOfContributors: ContributorData[],
     last: boolean,
-    // repo: string
 }
-export interface returningInterfaceFromAllRepos {
-    listOfRepos: allRepos[]
+export interface ReturningInterfaceFromAllRepos {
+    listOfRepos: AllRepos[]
     last: boolean
 }
 
 
 
-export interface contributorData {
+export interface ContributorData {
     login: string
     id: number
     node_id: string
@@ -46,7 +44,7 @@ export interface contributorData {
     repo: string
 }
 
-export interface allRepos {
+export interface AllRepos {
     archive_url: string
     archived: boolean
     assignees_url: string
@@ -125,11 +123,10 @@ export interface allRepos {
 
 export default class Api {
     static baseURL: string = "https://api.github.com"
-    constructor() { }
 
 
-    static getAllReposOfOrganization(orgName: string, page: number): Promise<returningInterfaceFromAllRepos> {
-        const promiseToReturn: Promise<returningInterfaceFromAllRepos> = new Promise((resolve, reject) => {
+    static getAllReposOfOrganization(orgName: string, page: number): Promise<ReturningInterfaceFromAllRepos> {
+        const promiseToReturn: Promise<ReturningInterfaceFromAllRepos> = new Promise((resolve, reject) => {
             fetch(`${Api.baseURL}/orgs/${orgName}/repos?per_page=100&page=${page}`, {
                 method: 'GET',
                 headers: {
@@ -150,16 +147,16 @@ export default class Api {
                     else {
                         last = true
                     }
-                    const obj: returningInterfaceFromAllRepos = {
+                    const obj: ReturningInterfaceFromAllRepos = {
                         listOfRepos: await response.json(),
                         last: last
                     }
                     return (obj)
                 })
-                .then((data: returningInterfaceFromAllRepos) => {
+                .then((data: ReturningInterfaceFromAllRepos) => {
                     resolve(data)
                 })
-                .catch((error: any) => {
+                .catch((error) => {
                     console.error('Error:', error);
                     reject(error)
                 });
@@ -168,9 +165,9 @@ export default class Api {
         return (promiseToReturn)
     }
 
-    static getAllContributorsFromParticularRepo(owner: string, repoName: string, page: number): Promise<returningInterfaceContributors> {
+    static getAllContributorsFromParticularRepo(owner: string, repoName: string, page: number): Promise<ReturningInterfaceContributors> {
         // console.log(page)
-        const promiseToReturn: Promise<returningInterfaceContributors> = new Promise((resolve, reject) => {
+        const promiseToReturn: Promise<ReturningInterfaceContributors> = new Promise((resolve, reject) => {
             fetch(`${Api.baseURL}/repos/${owner}/${repoName}/contributors?per_page=100&page=${page}`, {
                 method: 'GET',
                 headers: {
@@ -191,25 +188,28 @@ export default class Api {
                     else {
                         last = true
                     }
-                    let obj: returningInterfaceContributors
+                    let obj: ReturningInterfaceContributors
                     if (response.status === 200) {
+                        let listOfContributorsHelper: Array<ContributorData> = await response.json()
+                        listOfContributorsHelper.forEach((elem) => {
+                            elem.repo = repoName
+                        })
                         obj = {
-                            listOfContributors: await response.json(),
+                            listOfContributors: listOfContributorsHelper,
                             last: last,
                             // repo: repoName
                         }
                     }
                     else {
                         obj = {
-                            listOfContributors: [] as contributorData[],
+                            listOfContributors: [] as ContributorData[],
                             last: true,
                             // repo: repoName
                         }
                     }
-                    // console.log(obj.listOfContributors.length, " ", repoName)
                     return (obj)
                 })
-                .then((data: returningInterfaceContributors) => {
+                .then((data: ReturningInterfaceContributors) => {
                     resolve(data)
                 })
                 .catch((error: any) => {

@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Api from "./api/api"
-import { allRepos } from "./api/api"
-import { returningInterfaceFromAllRepos, returningInterfaceContributors, ReturningInterfaceFollowersAndRepos, contributorData } from "./api/api"
+import { ReturningInterfaceFromAllRepos, ReturningInterfaceContributors, ReturningInterfaceFollowersAndRepos, ContributorData } from "./api/api"
 import { useSelector, useDispatch } from 'react-redux'
 
-export interface ContributorDataWithFollowersAndReposNumber extends contributorData {
+export interface ContributorDataWithFollowersAndReposNumber extends ContributorData {
   numberOfRepositories: number,
   numberOfFollowers: number
 
@@ -14,7 +13,7 @@ export interface ContributorDataWithFollowersAndReposNumber extends contributorD
 
 function App() {
   console.log("render")
-  let allContributors: contributorData[] = [] as contributorData[]
+  let allContributors: ContributorData[] = [] as ContributorData[]
   let toGo: number
   const dispatch = useDispatch()
   const selector = useSelector((state: any) => state)
@@ -22,7 +21,7 @@ function App() {
 
   const handleOnePageOfReposInOrganization = (orgName: string, page: number): void => {
     Api.getAllReposOfOrganization(orgName, page)
-      .then((data: returningInterfaceFromAllRepos) => {
+      .then((data: ReturningInterfaceFromAllRepos) => {
         dispatch({ type: "addNewReposFromOrganization", data: data.listOfRepos })
         // console.log("raz")
         if (data.last === false) {
@@ -46,14 +45,14 @@ function App() {
     for (let i: number = 0; i < selector.reduxAllReposFromOrganization.all.length; i++) {
       // console.log(i)
       // console.log(selector.reduxAllReposFromOrganization.all[i].name)
-      createListOfContributorsFromOneRepo(orgName, selector.reduxAllReposFromOrganization.all[i].name, 1, [] as contributorData[])
+      createListOfContributorsFromOneRepo(orgName, selector.reduxAllReposFromOrganization.all[i].name, 1, [] as ContributorData[])
     }
 
   }
 
-  const createListOfContributorsFromOneRepo = (owner: string, repoName: string, page: number, prev: contributorData[]): void => {
+  const createListOfContributorsFromOneRepo = (owner: string, repoName: string, page: number, prev: ContributorData[]): void => {
     Api.getAllContributorsFromParticularRepo("angular", repoName, page)
-      .then((data: returningInterfaceContributors) => {
+      .then((data: ReturningInterfaceContributors) => {
         if (data.last === false) {
           data.listOfContributors.forEach((elem) => {
             elem.repo = repoName
@@ -66,20 +65,22 @@ function App() {
           const current = prev.concat(data.listOfContributors)
           // console.log(current)
           allContributors = allContributors.concat(current)
-          console.log(allContributors)
+          // console.log(allContributors)
           toGo -= 1
           if (toGo === 0) {
             console.log("raz wyzerowane")
             // console.log(allContributors)
-            const allContributorsAfterMerge: contributorData[] = [] as contributorData[]
+            const allContributorsAfterMerge: ContributorData[] = [] as ContributorData[]
             let helper: any = {}
-            allContributors.forEach((now: contributorData) => {
-              // console.log(now.repo)
+            allContributors.forEach((now: ContributorData) => {
+              // console.log("one contributor")
               if (helper.hasOwnProperty(now.login)) {
+                // console.log(helper[now.login])
                 helper[now.login].contributions += now.contributions
                 helper[now.login].repo.push(now.repo)
               }
               else {
+                // console.log(now.repo)
                 helper[now.login] = now
                 helper[now.login].repo = [now.repo]
               }
@@ -95,7 +96,7 @@ function App() {
       })
   }
 
-  const getDataAboutContributorsWithFollowersAndReposNumber = (startingNumber: number, listOfContributors: contributorData[]): void => {
+  const getDataAboutContributorsWithFollowersAndReposNumber = (startingNumber: number, listOfContributors: any): void => {
     const nowTab: Promise<ReturningInterfaceFollowersAndRepos>[] = []
     let endingNumber: number
     if (startingNumber + 100 < listOfContributors.length) {
@@ -105,7 +106,7 @@ function App() {
       endingNumber = listOfContributors.length
     }
     for (let i: number = startingNumber; i < endingNumber; i++) {
-      nowTab.push(Api.getUserDetails(listOfContributors[i].login, listOfContributors[i].contributions, [] as string[]))
+      nowTab.push(Api.getUserDetails(listOfContributors[i].login, listOfContributors[i].contributions, listOfContributors[i].repo as string[]))
 
     }
     Promise.all(nowTab)

@@ -1,9 +1,9 @@
 
-import { allRepos } from "../api/api"
+import { AllRepos } from "../api/api"
 
 interface actionInterface {
     type: string,
-    data: allRepos[]
+    data: AllRepos[]
 }
 
 const reduxAllReposFromOrganization = (state = { all: [] as any[] }, action: actionInterface) => {
