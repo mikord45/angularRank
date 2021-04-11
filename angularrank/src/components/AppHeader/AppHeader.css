@@ -1,0 +1,35 @@
+.header{
+    width: calc(80vw - 20px);
+    padding: 0px 10px;
+    display: flex;
+    background-color: rgba(169,169,169,0.8);
+    text-align: center;
+    margin: 5px 0px;
+}
+
+.header__part:nth-child(1){
+    cursor:inherit;
+}
+
+.header__part{
+    display: flex;
+    align-items: center;
+    flex:1;
+    cursor: pointer;
+}
+
+.header__part p{
+    text-align: center;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.header__part:hover{
+    background-color: rgba(169,169,169,1);
+}
+
+.header__id{
+    pointer-events: none !important;
+}
+

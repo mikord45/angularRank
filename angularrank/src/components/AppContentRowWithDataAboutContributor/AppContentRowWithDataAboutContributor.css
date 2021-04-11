@@ -1,0 +1,12 @@
+.content__row{
+    display: flex;
+    width: calc(80vw - 20px);
+    margin: 5px;
+    background-color: #c9c8c5;
+    border-radius: 15px;
+}
+
+.row__part{
+    flex:1;
+    text-align: center;
+}

@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
+import React, { Dispatch, useEffect } from 'react';
 import './App.css';
 import Api from "./api/api"
-import { RootState } from "./reducers/index"
 import { ReturningInterfaceFromAllRepos, ReturningInterfaceContributors, ReturningInterfaceFollowersAndRepos, ContributorData, ContributorDataWithReposInformation } from "./api/api"
 import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from "./index"
+import { actionInterfaceReduxAllContributorsWithAdditionalInfo } from "./reducers/reduxAllContributorsWithAdditionalInfo"
+import { actionInterfaceReduxAllReposFromOrganization } from "./reducers/reduxAllReposFromOrganization"
+import AppContent from "./components/AppContent/AppContent"
+import AppHeader from "./components/AppHeader/AppHeader"
 
-export interface ContributorDataWithFollowersAndReposNumber extends ContributorData {
+export interface ContributorDataWithFollowersAndReposNumber extends ContributorDataWithReposInformationArrayVersion {
   numberOfRepositories: number,
   numberOfFollowers: number
 }
@@ -16,17 +19,18 @@ export interface ContributorDataWithReposInformationArrayVersion extends Contrib
 }
 
 function App() {
-  console.log("render")
+  // console.log("render")
   let allContributors: ContributorDataWithReposInformation[] = [] as ContributorDataWithReposInformation[]
   let toGo: number
-  const dispatch = useDispatch()
+  const dispatchForReposData = useDispatch<Dispatch<actionInterfaceReduxAllReposFromOrganization>>()
+  const dispatchForContributorsData = useDispatch<Dispatch<actionInterfaceReduxAllContributorsWithAdditionalInfo>>()
   const selector = useSelector((state: RootState) => state)
 
 
   const handleOnePageOfReposInOrganization = (orgName: string, page: number): void => {
     Api.getAllReposOfOrganization(orgName, page)
       .then((data: ReturningInterfaceFromAllRepos) => {
-        dispatch({ type: "addNewReposFromOrganization", data: data.listOfRepos })
+        dispatchForReposData({ type: "addNewReposFromOrganization", data: data.listOfRepos })
         if (data.last === false) {
           const currentPage: number = page + 1
           handleOnePageOfReposInOrganization(orgName, currentPage)
@@ -114,7 +118,7 @@ function App() {
     }
     Promise.all(nowTab)
       .then((value: ReturningInterfaceFollowersAndRepos[]) => {
-        dispatch({ type: "addNewAdditionalContributorsData", data: value })
+        dispatchForContributorsData({ type: "addNewAdditionalContributorsData", data: value })
         if (endingNumber !== listOfContributors.length) {
           getDataAboutContributorsWithFollowersAndReposNumber(endingNumber, listOfContributors)
         }
@@ -128,12 +132,17 @@ function App() {
   }
 
   useEffect((): void => {
-    handleOnePageOfReposInOrganization("angular", 1)
+    handleOnePageOfReposInOrganization("Angular", 1)
   }, [])
 
 
   return (
     <div className="main">
+      <AppHeader title="User Name" propertiesOfUser={["Number of contributors", "Number of repositories and gists", "Number of Followers"]} namesOfPropertiesToSortBy={["userName", "numberOfContributions", "numberOfRepositories", "numberOfFollowers"]} />
+      <AppContent />
+      {/* {selector.reduxAllContributorsWithAdditionalInfo.all.map((elem) => {
+        return (<p>{elem.userName}</p>)
+      })} */}
     </div>
   );
 }

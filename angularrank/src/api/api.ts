@@ -2,13 +2,14 @@ import parse from "parse-link-header"
 
 
 export interface ReturningInterfaceFollowersAndRepos {
+    // [key: string]: number | string | string[]
     numberOfRepositories: number,
     numberOfFollowers: number,
     userName: string,
     numberOfContributions: number,
     repos: string[]
-
 }
+
 
 export interface ReturningInterfaceContributors {
     listOfContributors: ContributorDataWithReposInformation[],
@@ -134,7 +135,7 @@ export default class Api {
             fetch(`${Api.baseURL}/orgs/${orgName}/repos?per_page=100&page=${page}`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': 'token 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',
+                    'Authorization': 'token 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',
                 },
             })
                 .then(async (response) => {
@@ -174,7 +175,7 @@ export default class Api {
             fetch(`${Api.baseURL}/repos/${owner}/${repoName}/contributors?per_page=100&page=${page}`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': 'token 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',
+                    'Authorization': 'token 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',
                 },
             })
                 .then(async (response) => {
@@ -263,7 +264,7 @@ export default class Api {
             fetch(`${Api.baseURL}/users/${userName}`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': 'token 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',
+                    'Authorization': 'token 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',
                 },
             })
                 .then(response => response.json())

@@ -1,12 +1,12 @@
 
 import { AllRepos } from "../api/api"
 
-interface actionInterface {
+export interface actionInterfaceReduxAllReposFromOrganization {
     type: string,
     data: AllRepos[]
 }
 
-const reduxAllReposFromOrganization = (state = { all: [] as AllRepos[] }, action: actionInterface) => {
+const reduxAllReposFromOrganization = (state = { all: [] as AllRepos[] }, action: actionInterfaceReduxAllReposFromOrganization) => {
     switch (action.type) {
         case "setNewReposFromOrganization":
             return Object.assign({}, state, {

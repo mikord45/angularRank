@@ -1,0 +1,15 @@
+.content__buttonToLoadMore{
+    cursor: pointer;
+    background-color: rgba(169,169,169,0.8);
+    transition: background-color 0.2s;
+    width: 25vw;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 15px;
+    margin: 20px;
+}
+
+.content__buttonToLoadMore:hover{
+    background-color: rgba(169,169,169, 1);
+}

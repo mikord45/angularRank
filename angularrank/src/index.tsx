@@ -8,11 +8,9 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from "./reducers/index"
 import { Provider } from "react-redux"
 
+export type RootState = ReturnType<typeof store.getState>
 
-const store = createStore(rootReducer, composeWithDevTools(
-  // applyMiddleware(...middleware)
-  // other store enhancers if any
-))
+const store = createStore(rootReducer, composeWithDevTools())
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>

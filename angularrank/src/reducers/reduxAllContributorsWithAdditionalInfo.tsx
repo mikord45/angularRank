@@ -1,12 +1,11 @@
 
-import { ContributorDataWithFollowersAndReposNumber } from "../App"
-
-interface actionInterface {
+import { ReturningInterfaceFollowersAndRepos } from "../api/api"
+export interface actionInterfaceReduxAllContributorsWithAdditionalInfo {
     type: string,
-    data: ContributorDataWithFollowersAndReposNumber
+    data: ReturningInterfaceFollowersAndRepos[]
 }
 
-const reduxAllContributorsWithAdditionalInfo = (state = { all: [] as ContributorDataWithFollowersAndReposNumber[] }, action: actionInterface) => {
+const reduxAllContributorsWithAdditionalInfo = (state = { all: [] as ReturningInterfaceFollowersAndRepos[] }, action: actionInterfaceReduxAllContributorsWithAdditionalInfo) => {
     switch (action.type) {
         case "setNewAdditionalContributorsData":
             return Object.assign({}, state, {
