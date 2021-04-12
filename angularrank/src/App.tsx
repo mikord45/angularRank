@@ -1,7 +1,7 @@
 import React, { Dispatch, useEffect } from 'react';
 import './App.css';
 import Api from "./api/api"
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import { BrowserRouter as Router, Route, Switch, useHistory } from "react-router-dom"
 import { ReturningInterfaceFromAllRepos, ReturningInterfaceContributors, ReturningInterfaceFollowersAndRepos, ContributorData, ContributorDataWithReposInformation } from "./api/api"
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from "./index"
@@ -10,6 +10,7 @@ import { actionInterfaceReduxAllReposFromOrganization } from "./reducers/reduxAl
 import ContributorsRankingPage from "./components/ContributorsRankingPage/ContributorsRankingPage"
 import UserDetailsPage from "./components/UserDetailsPage/UserDetailsPage"
 import RepositoryDetailsPage from "./components/RepositoryDetailsPage/RepositoryDetailsPage"
+import LoadingPage from "./components/LoadingPage/LoadingPage"
 export interface ContributorDataWithFollowersAndReposNumber extends ContributorDataWithReposInformationArrayVersion {
   numberOfRepositories: number,
   numberOfFollowers: number
@@ -20,7 +21,6 @@ export interface ContributorDataWithReposInformationArrayVersion extends Contrib
 }
 
 function App() {
-  // console.log("render")
   let allContributors: ContributorDataWithReposInformation[] = [] as ContributorDataWithReposInformation[]
   let toGo: number
   const dispatchForReposData = useDispatch<Dispatch<actionInterfaceReduxAllReposFromOrganization>>()
@@ -133,12 +133,17 @@ function App() {
       })
   }
 
+  const updateAplicationData = () => {
+    handleOnePageOfReposInOrganization("Angular", 1)
+    window.localStorage.removeItem("repos")
+    window.localStorage.removeItem("contributors")
+  }
+
   useEffect((): void => {
     if (window.localStorage.repos === undefined || window.localStorage.contributors === undefined) {
       handleOnePageOfReposInOrganization("Angular", 1)
     }
     else {
-      console.log(JSON.parse(window.localStorage.contributors))
       dispatchForReposData({ type: "setNewReposFromOrganization", data: JSON.parse(window.localStorage.repos) })
       dispatchForContributorsData({ type: "setNewAdditionalContributorsData", data: JSON.parse(window.localStorage.contributors) })
     }
@@ -149,7 +154,8 @@ function App() {
     <div className="main">
       <Router>
         <Switch>
-          <Route exact path="/" component={ContributorsRankingPage} />
+          <Route path="/loadingPage" component={LoadingPage} />
+          <Route exact path="/" component={() => <ContributorsRankingPage updateAppFunction={updateAplicationData} />} />
           <Route path="/userDetails/:userName" component={UserDetailsPage} />
           <Route path="/repositoryDetails/:repositoryName" component={RepositoryDetailsPage} />
         </Switch>

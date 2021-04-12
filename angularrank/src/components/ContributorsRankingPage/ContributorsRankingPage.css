@@ -1,0 +1,12 @@
+.app_updateApp{
+    position: absolute;
+    background-color: rgba(169, 169, 169, 0.8);
+    left: 5px;
+    top: 5px;
+    padding: 5px;;
+    cursor: pointer;
+}
+
+.app_updateApp:hover{
+    background-color: rgba(169, 169, 169, 1);
+}
