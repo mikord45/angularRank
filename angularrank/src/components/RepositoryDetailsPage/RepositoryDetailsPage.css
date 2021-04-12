@@ -1,0 +1,66 @@
+.repository{
+    width: 80vw;
+    background-color: #e3e2de;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    overflow-y:scroll;
+    scrollbar-width: none;
+}
+
+.repository::-webkit-scrollbar {
+    display: none;
+}
+
+.repository__repositoryName{
+    font-size: 2em;
+    text-align: center;
+}
+
+.repository__boxForData{
+    margin-top: 2em;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/*  */
+.repository_listOfContributors{
+    width: 80%;
+}
+
+.listOfContributors__title{
+    font-weight: bold;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.listOfContributors__rows{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 5vh;
+}
+
+.listOfContributors__row{
+    background-color: rgba(169, 169, 169, 0.8);
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 7px;
+    width: 40%;
+}
+
+.listOfContributors__row:hover{
+    background-color: rgba(169, 169, 169, 1);
+}
+
+.listOfContributors__row p{
+    font-size: 1.3em;
+    text-align: center;
+    margin: 0px;
+}

@@ -1,14 +1,15 @@
 import React, { Dispatch, useEffect } from 'react';
 import './App.css';
 import Api from "./api/api"
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import { ReturningInterfaceFromAllRepos, ReturningInterfaceContributors, ReturningInterfaceFollowersAndRepos, ContributorData, ContributorDataWithReposInformation } from "./api/api"
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from "./index"
 import { actionInterfaceReduxAllContributorsWithAdditionalInfo } from "./reducers/reduxAllContributorsWithAdditionalInfo"
 import { actionInterfaceReduxAllReposFromOrganization } from "./reducers/reduxAllReposFromOrganization"
-import AppContent from "./components/AppContent/AppContent"
-import AppHeader from "./components/AppHeader/AppHeader"
-
+import ContributorsRankingPage from "./components/ContributorsRankingPage/ContributorsRankingPage"
+import UserDetailsPage from "./components/UserDetailsPage/UserDetailsPage"
+import RepositoryDetailsPage from "./components/RepositoryDetailsPage/RepositoryDetailsPage"
 export interface ContributorDataWithFollowersAndReposNumber extends ContributorDataWithReposInformationArrayVersion {
   numberOfRepositories: number,
   numberOfFollowers: number
@@ -123,7 +124,8 @@ function App() {
           getDataAboutContributorsWithFollowersAndReposNumber(endingNumber, listOfContributors)
         }
         else {
-          console.log("koniec")
+          window.localStorage.setItem("repos", JSON.stringify(selector.reduxAllReposFromOrganization.all))
+          window.localStorage.setItem("contributors", JSON.stringify(selector.reduxAllContributorsWithAdditionalInfo.all))
         }
       })
       .catch(() => {
@@ -132,17 +134,26 @@ function App() {
   }
 
   useEffect((): void => {
-    handleOnePageOfReposInOrganization("Angular", 1)
+    if (window.localStorage.repos === undefined || window.localStorage.contributors === undefined) {
+      handleOnePageOfReposInOrganization("Angular", 1)
+    }
+    else {
+      console.log(JSON.parse(window.localStorage.contributors))
+      dispatchForReposData({ type: "setNewReposFromOrganization", data: JSON.parse(window.localStorage.repos) })
+      dispatchForContributorsData({ type: "setNewAdditionalContributorsData", data: JSON.parse(window.localStorage.contributors) })
+    }
   }, [])
 
 
   return (
     <div className="main">
-      <AppHeader title="User Name" propertiesOfUser={["Number of contributors", "Number of repositories and gists", "Number of Followers"]} namesOfPropertiesToSortBy={["userName", "numberOfContributions", "numberOfRepositories", "numberOfFollowers"]} />
-      <AppContent />
-      {/* {selector.reduxAllContributorsWithAdditionalInfo.all.map((elem) => {
-        return (<p>{elem.userName}</p>)
-      })} */}
+      <Router>
+        <Switch>
+          <Route exact path="/" component={ContributorsRankingPage} />
+          <Route path="/userDetails/:userName" component={UserDetailsPage} />
+          <Route path="/repositoryDetails/:repositoryName" component={RepositoryDetailsPage} />
+        </Switch>
+      </Router>
     </div>
   );
 }

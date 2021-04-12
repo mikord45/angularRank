@@ -28,6 +28,7 @@ export interface ContributorDataWithReposInformation extends ContributorData {
 
 
 export interface ContributorData {
+    [index: string]: string | number | boolean | string[]
     login: string
     id: number
     node_id: string
@@ -50,6 +51,7 @@ export interface ContributorData {
 }
 
 export interface AllRepos {
+    [index: string]: string | number | boolean | Object
     archive_url: string
     archived: boolean
     assignees_url: string
@@ -258,6 +260,26 @@ export default class Api {
     //             console.error('Error:', error);
     //         });
     // }
+
+    static getUserDetailsSimple(userName: string): Promise<ContributorData> {
+        const promiseToReturn: Promise<ContributorData> = new Promise((resolve, reject) => {
+            fetch(`${Api.baseURL}/users/${userName}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'token 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',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    resolve(data)
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    reject(error)
+                });
+        })
+        return (promiseToReturn)
+    }
 
     static getUserDetails(userName: string, contributions: number, repos: string[]): Promise<ReturningInterfaceFollowersAndRepos> {
         const promiseToReturn: Promise<ReturningInterfaceFollowersAndRepos> = new Promise((resolve, reject) => {

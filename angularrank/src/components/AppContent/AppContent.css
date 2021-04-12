@@ -8,8 +8,19 @@
     overflow-y: scroll;
     -ms-overflow-style: none; 
     scrollbar-width: none;
+    scroll-behavior: smooth;
 }
 
 .content::-webkit-scrollbar {
     display: none;
-  }
+}
+
+.animateContributors .enter {
+    opacity: 0;
+    
+}
+
+.animateContributors .enter-done {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+}

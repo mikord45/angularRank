@@ -1,0 +1,69 @@
+.user{
+    width: 80vw;
+    background-color: #e3e2de;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    overflow-y:scroll;
+    scrollbar-width: none;
+}
+
+.user::-webkit-scrollbar {
+    display: none;
+}
+
+.user__userName{
+    font-size: 2em;
+    text-align: center;
+}
+
+.user__avatar{
+    width: 20%;
+}
+
+.user__boxForData{
+    margin-top: 2em;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user_listOfRepos{
+    width: 80%;
+}
+
+.listOfRepos__title{
+    font-weight: bold;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.listOfRepos__rows{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 5vh;
+}
+
+.listOfRepos__row{
+    background-color: rgba(169, 169, 169, 0.8);
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 7px;
+    width: 40%;
+}
+
+.listOfRepos__row:hover{
+    background-color: rgba(169, 169, 169, 1);
+}
+
+.listOfRepos__row p{
+    font-size: 1.3em;
+    text-align: center;
+    margin: 0px;
+}
