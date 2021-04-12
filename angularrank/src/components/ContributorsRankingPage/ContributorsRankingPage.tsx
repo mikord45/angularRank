@@ -20,7 +20,7 @@ export default function Contributorsrankingpage(props: ProperPropsForContributor
     return (
         <React.Fragment>
             <div className="app_updateApp" onClick={props.updateAppFunction}>
-                <p>Update App</p>
+                <p>Refresh App</p>
             </div>
             <AppHeader title="User Name" propertiesOfUser={["Number of contributors", "Number of repositories and gists", "Number of Followers"]} namesOfPropertiesToSortBy={["userName", "numberOfContributions", "numberOfRepositories", "numberOfFollowers"]} />
             <AppContent />

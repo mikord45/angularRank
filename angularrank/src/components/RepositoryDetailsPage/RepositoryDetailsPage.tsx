@@ -6,6 +6,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "../../index"
 import { AllRepos } from "../../api/api"
 import BoxForDataAboutRepository from "../BoxForDataAboutRepository/BoxForDataAboutRepository"
+import ReturnHomeButton from "../ReturnHomeButton/ReturnHomeButton"
 
 interface MatchParams {
     repositoryName: string;
@@ -45,26 +46,27 @@ export default function Repositorydetailspage(props: ProperPropsForRepositoryDet
     }, [allContributorsRedux, allReposRedux.all, props.match.params.repositoryName])
 
     return (
-        <div className="repository" >
-            <p className="repository__repositoryName">{props.match.params.repositoryName}</p>
-            <div className="repository__boxForData">
-                <BoxForDataAboutRepository dataToShow={["default_branch", "language"]} descriptions={["Default branch", "Main language"]} dataAboutRepository={dataAboutRepository} />
-                <BoxForDataAboutRepository dataToShow={["watchers", "url"]} descriptions={["Watchers", "Go to github page"]} dataAboutRepository={dataAboutRepository} />
-            </div>
-            <div className="repository_listOfContributors">
-                <p className="listOfContributors__title">List of contributors:</p>
-                <div className="listOfContributors__rows">
-                    {listOfAllContributors.map((elem) => {
-                        return (
-                            <div className="listOfContributors__row" onClick={() => { handleClickGoToUserPage(elem) }}>
-                                <p>{elem}</p>
-                            </div>
-                        )
-                    })}
+        <React.Fragment>
+            <ReturnHomeButton />
+            <div className="repository" >
+                <p className="repository__repositoryName">{props.match.params.repositoryName}</p>
+                <div className="repository__boxForData">
+                    <BoxForDataAboutRepository dataToShow={["default_branch", "language"]} descriptions={["Default branch", "Main language"]} dataAboutRepository={dataAboutRepository} />
+                    <BoxForDataAboutRepository dataToShow={["watchers", "url"]} descriptions={["Watchers", "Go to github page"]} dataAboutRepository={dataAboutRepository} />
+                </div>
+                <div className="repository_listOfContributors">
+                    <p className="listOfContributors__title">List of contributors:</p>
+                    <div className="listOfContributors__rows">
+                        {listOfAllContributors.map((elem) => {
+                            return (
+                                <div className="listOfContributors__row" onClick={() => { handleClickGoToUserPage(elem) }}>
+                                    <p>{elem}</p>
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
             </div>
-        </div>
-
-
+        </React.Fragment>
     )
 }

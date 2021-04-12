@@ -6,6 +6,7 @@ import Api, { ContributorData } from "../../api/api"
 import { RouteComponentProps } from 'react-router'
 import { useHistory } from "react-router-dom"
 import BoxForDataAboutUser from "../BoxForDataAboutUser/BoxForDataAboutUser"
+import ReturnHomeButton from "../ReturnHomeButton/ReturnHomeButton"
 
 interface MatchParams {
     userName: string;
@@ -65,26 +66,30 @@ export default function Userdetailspage(props: ProperPropsForUserDetailsPage) {
 
 
     return (
-        <div className="user">
-            <p className="user__userName">{props.match.params.userName}</p>
-            <img className="user__avatar" src={dataAboutUser?.avatar_url} alt="####"></img>
-            <div className="user__boxForData">
-                <BoxForDataAboutUser dataToShow={["html_url", "name"]} descriptions={["Go to github profile", "Name"]} dataAboutUser={dataAboutUser} />
-                <BoxForDataAboutUser dataToShow={["company", "public_repos"]} descriptions={["Company name", "Number of public repos"]} dataAboutUser={dataAboutUser} />
-                <BoxForDataAboutUser dataToShow={["public_gists", "followers"]} descriptions={["Number of public gists", "Number of followers"]} dataAboutUser={dataAboutUser} />
-            </div>
-            <div className="user_listOfRepos">
-                <p className="listOfRepos__title">List of repos:</p>
-                <div className="listOfRepos__rows">
-                    {listOfReposOfThisUser.map((elem) => {
-                        return (
-                            <div className="listOfRepos__row" onClick={() => { handleClickGoToRepositoryPage(elem) }}>
-                                <p>{elem}</p>
-                            </div>
-                        )
-                    })}
+        <React.Fragment>
+            <ReturnHomeButton />
+            <div className="user">
+                <p className="user__userName">{props.match.params.userName}</p>
+                <img className="user__avatar" src={dataAboutUser?.avatar_url} alt="####"></img>
+                <div className="user__boxForData">
+                    <BoxForDataAboutUser dataToShow={["html_url", "name"]} descriptions={["Go to github profile", "Name"]} dataAboutUser={dataAboutUser} />
+                    <BoxForDataAboutUser dataToShow={["company", "public_repos"]} descriptions={["Company name", "Number of public repos"]} dataAboutUser={dataAboutUser} />
+                    <BoxForDataAboutUser dataToShow={["public_gists", "followers"]} descriptions={["Number of public gists", "Number of followers"]} dataAboutUser={dataAboutUser} />
+                </div>
+                <div className="user_listOfRepos">
+                    <p className="listOfRepos__title">List of repos:</p>
+                    <div className="listOfRepos__rows">
+                        {listOfReposOfThisUser.map((elem) => {
+                            return (
+                                <div className="listOfRepos__row" onClick={() => { handleClickGoToRepositoryPage(elem) }}>
+                                    <p>{elem}</p>
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
             </div>
-        </div>
+        </React.Fragment>
+
     )
 }
