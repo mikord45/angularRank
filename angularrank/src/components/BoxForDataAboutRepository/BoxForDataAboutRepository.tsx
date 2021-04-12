@@ -21,12 +21,12 @@ export default function Boxfordataaboutrepository(props: ProperPropsForBoxForDat
                     }
                     if (props.descriptions[i] !== "Go to github page") {
                         return (
-                            <p className="boxForData__Info"><span>{props.descriptions[i]}: </span><br />{textToDisplay}</p>
+                            <p key={i} className="boxForData__Info"><span>{props.descriptions[i]}: </span><br />{textToDisplay}</p>
                         )
                     }
                     else {
                         return (
-                            <p className="boxForData__Info"><span>{props.descriptions[i]}: </span><br /><a href={textToDisplay}>Click!</a></p>
+                            <p key={i} className="boxForData__Info"><span>{props.descriptions[i]}: </span><br /><a href={textToDisplay}>Click!</a></p>
                         )
                     }
 

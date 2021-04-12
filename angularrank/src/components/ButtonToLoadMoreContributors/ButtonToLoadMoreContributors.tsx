@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react'
+import React from 'react'
 import "./ButtonToLoadMoreContributors.css"
 
 interface ProperPropsForButtonToLoadMoreContributors {

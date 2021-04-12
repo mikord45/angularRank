@@ -11,7 +11,7 @@ export default function Returnhomebutton() {
 
     return (
         <div className="app_returnHome" onClick={handleClickGoToHome}>
-            <p>Return Home Page</p>
+            <p>Return To Home Page</p>
         </div>
     )
 }

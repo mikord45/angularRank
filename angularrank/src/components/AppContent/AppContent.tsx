@@ -17,15 +17,9 @@ export default function Appcontent() {
 
     const loadMoreContributors = (howManyNew: number): void => {
         setHowManyContributorsListed(howManyContributorsListed + howManyNew)
-        scrollDown()
-    }
-
-    const scrollDown = () => {
-        console.log("jest")
     }
 
     useEffect(() => {
-        console.log("AppContent - useEffect")
         setContributorsToList(allContributorsRedux.all.slice(0, howManyContributorsListed))
         const howManyContributorsLeft: number = allContributorsRedux.all.length - howManyContributorsListed
         if (howManyContributorsLeft > 10) {

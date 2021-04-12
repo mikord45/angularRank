@@ -57,9 +57,9 @@ export default function Repositorydetailspage(props: ProperPropsForRepositoryDet
                 <div className="repository_listOfContributors">
                     <p className="listOfContributors__title">List of contributors:</p>
                     <div className="listOfContributors__rows">
-                        {listOfAllContributors.map((elem) => {
+                        {listOfAllContributors.map((elem, i) => {
                             return (
-                                <div className="listOfContributors__row" onClick={() => { handleClickGoToUserPage(elem) }}>
+                                <div key={i} className="listOfContributors__row" onClick={() => { handleClickGoToUserPage(elem) }}>
                                     <p>{elem}</p>
                                 </div>
                             )

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createStore, applyMiddleware } from "redux";
+import { createStore } from "redux";
 import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from "./reducers/index"
 import { Provider } from "react-redux"

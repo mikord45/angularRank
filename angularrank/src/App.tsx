@@ -1,7 +1,7 @@
 import React, { Dispatch, useEffect } from 'react';
 import './App.css';
-import Api from "./api/api"
-import { BrowserRouter as Router, Route, Switch, useHistory } from "react-router-dom"
+import Api, { AllRepos } from "./api/api"
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import { ReturningInterfaceFromAllRepos, ReturningInterfaceContributors, ReturningInterfaceFollowersAndRepos, ContributorData, ContributorDataWithReposInformation } from "./api/api"
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from "./index"
@@ -42,12 +42,11 @@ function App() {
       })
       .catch((error) => {
         console.log(`Error: ${error}`)
-        //ustaw odpowiedni state aplikacji
+        handleOnePageOfReposInOrganization(orgName, page)
       })
   }
 
   const createListOfContributorsFromOrganization = (orgName: string): void => {
-    // const orgName: string = "angular"
     toGo = selector.reduxAllReposFromOrganization.all.length
     for (let i: number = 0; i < selector.reduxAllReposFromOrganization.all.length; i++) {
       createListOfContributorsFromOneRepo(orgName, selector.reduxAllReposFromOrganization.all[i].name, 1, [] as ContributorDataWithReposInformation[])
@@ -75,7 +74,7 @@ function App() {
         }
       })
       .catch((error) => {
-        ////ustaw state
+        createListOfContributorsFromOneRepo(owner, repoName, page, prev)
       })
   }
 
@@ -100,7 +99,6 @@ function App() {
     for (const prop in helper) {
       allContributorsAfterMerge.push(helper[prop])
     }
-    console.log(allContributorsAfterMerge)
     getDataAboutContributorsWithFollowersAndReposNumber(0, allContributorsAfterMerge)
   }
 
@@ -129,11 +127,13 @@ function App() {
         }
       })
       .catch(() => {
-        //ustaw odwiedni state
+        getDataAboutContributorsWithFollowersAndReposNumber(startingNumber, listOfContributors)
       })
   }
 
   const updateAplicationData = () => {
+    dispatchForReposData({ type: "setNewReposFromOrganization", data: [] as AllRepos[] })
+    dispatchForContributorsData({ type: "setNewAdditionalContributorsData", data: [] as ReturningInterfaceFollowersAndRepos[] })
     handleOnePageOfReposInOrganization("Angular", 1)
     window.localStorage.removeItem("repos")
     window.localStorage.removeItem("contributors")

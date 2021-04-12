@@ -2,7 +2,6 @@ import parse from "parse-link-header"
 
 
 export interface ReturningInterfaceFollowersAndRepos {
-    // [key: string]: number | string | string[]
     numberOfRepositories: number,
     numberOfFollowers: number,
     userName: string,
@@ -227,39 +226,6 @@ export default class Api {
         })
         return (promiseToReturn)
     }
-
-
-    // static getNumberOfFollowersOfParticularUser(userName: string) {
-    //     fetch(`${Api.baseURL}/users/${userName}/followers`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             console.log('Success:', data);
-    //         })
-    //         .catch((error) => {
-    //             console.error('Error:', error);
-    //         });
-    // }
-
-    // static getReposOfParticularUser(userName: string) {
-    //     fetch(`${Api.baseURL}/users/${userName}/repos`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             console.log('Success:', data);
-    //         })
-    //         .catch((error) => {
-    //             console.error('Error:', error);
-    //         });
-    // }
 
     static getUserDetailsSimple(userName: string): Promise<ContributorData> {
         const promiseToReturn: Promise<ContributorData> = new Promise((resolve, reject) => {

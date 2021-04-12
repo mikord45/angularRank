@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import "./BoxForDataAboutUser.css"
-import { RootState } from "../../index"
-import { useSelector } from "react-redux"
 import { ContributorData } from '../../api/api'
 
 
@@ -23,12 +21,12 @@ export default function Boxfordataaboutuser(props: ProperPropsForBoxForDataAbout
                     }
                     if (props.descriptions[i] !== "Go to github profile") {
                         return (
-                            <p className="boxForData__Info"><span>{props.descriptions[i]}: </span><br />{textToDisplay}</p>
+                            <p key={i} className="boxForData__Info"><span>{props.descriptions[i]}: </span><br />{textToDisplay}</p>
                         )
                     }
                     else {
                         return (
-                            <p className="boxForData__Info"><span>{props.descriptions[i]}: </span><br /><a href={textToDisplay}>Click!</a></p>
+                            <p key={i} className="boxForData__Info"><span>{props.descriptions[i]}: </span><br /><a href={textToDisplay}>Click!</a></p>
                         )
                     }
 

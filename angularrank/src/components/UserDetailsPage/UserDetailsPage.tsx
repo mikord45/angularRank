@@ -15,7 +15,6 @@ interface MatchParams {
 interface ProperPropsForUserDetailsPage extends RouteComponentProps<MatchParams> { }
 
 export default function Userdetailspage(props: ProperPropsForUserDetailsPage) {
-    console.log("render userDetails")
     const history = useHistory()
     const allContributorsRedux = useSelector((state: RootState) => state.reduxAllContributorsWithAdditionalInfo)
     const [listOfReposOfThisUser, setListReposOfThisUser] = useState<string[]>([] as string[])
@@ -51,10 +50,9 @@ export default function Userdetailspage(props: ProperPropsForUserDetailsPage) {
                 setDataAboutUser(data)
             })
             .catch((error) => {
-                //zrob tu cos
+                console.log("Error during fetching data about user")
             })
         const dataAboutThisContributor = allContributorsRedux.all.filter((elem) => {
-            // console.log(elem.userName, " ", props.dataAboutUser.userName)
             if (elem.userName === props.match.params.userName) {
                 return (elem)
             }
@@ -79,9 +77,9 @@ export default function Userdetailspage(props: ProperPropsForUserDetailsPage) {
                 <div className="user_listOfRepos">
                     <p className="listOfRepos__title">List of repos:</p>
                     <div className="listOfRepos__rows">
-                        {listOfReposOfThisUser.map((elem) => {
+                        {listOfReposOfThisUser.map((elem, i) => {
                             return (
-                                <div className="listOfRepos__row" onClick={() => { handleClickGoToRepositoryPage(elem) }}>
+                                <div key={i} className="listOfRepos__row" onClick={() => { handleClickGoToRepositoryPage(elem) }}>
                                     <p>{elem}</p>
                                 </div>
                             )

@@ -5,7 +5,6 @@ import "./LoadingPage.css"
 export default function Loadingpage() {
     const history = useHistory()
     useEffect(() => {
-        console.log("tutaj")
         const interval = setInterval(() => {
             if (window.localStorage.repos !== undefined || window.localStorage.contributors !== undefined) {
                 history.push("/")
